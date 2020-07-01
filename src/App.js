@@ -30,15 +30,30 @@ squares = Shuffle(squares);
 
 
 const App = () => {
-  const [openSquares, setOpenSquares] = useState([])
+  const [openSquares, setOpenSquares] = useState([]);
+  const [count, setCount] = useState(0);
+  const [pick, setPick] = useState([]); //для отметки одинаковых
+
+  function toGray(item){
+    item.color = 'gray';//как блять выбрать открытые??
+  }
 
   function squareClick(item) {
+    if (count === 2) {
+    setCount (0);
+    toGray(item);
+    return ;
+    };
     setOpenSquares([...openSquares, item.id])
+    setCount (count + 1);
+
   }
+
 
   function isOpen(id) {
     return openSquares.includes(id)
   }
+
 
   return (
     <div className="App">
