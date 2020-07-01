@@ -32,26 +32,27 @@ squares = Shuffle(squares);
 const App = () => {
   const [openSquares, setOpenSquares] = useState([]);
   const [count, setCount] = useState(0);
-  const [pick, setPick] = useState([]); //для отметки одинаковых
+  const [pick, setPick] = useState([]);
 
-  function toGray(item){
-    item.color = 'gray';//как блять выбрать открытые??
-  }
-
-  function squareClick(item) {
+  const squareClick = (item) => {
     if (count === 2) {
+      if (pick[0].color === pick[1].color) {
+        setOpenSquares([...openSquares, pick[0].id, pick[1].id]);
+        setPick([]);
+      }
     setCount (0);
-    toGray(item);
+    setPick ([]);
     return ;
     };
-    setOpenSquares([...openSquares, item.id])
     setCount (count + 1);
+    setPick ([...pick, item]);
+    }
 
-  }
 
-
-  function isOpen(id) {
-    return openSquares.includes(id)
+  const isOpen = (id) => {
+    return openSquares.includes(id) ||
+      (pick[0] && pick[0].id === id) ||
+      (pick[1] && pick[1].id === id)
   }
 
 
