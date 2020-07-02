@@ -1,14 +1,30 @@
 import React, { useState } from 'react';
 import './App.css';
+import pol1 from '../img/pol1.jpg'
+import pol2 from '../img/pol2.jpg'
+import pol3 from '../img/pol3.jpg'
+import pol4 from '../img/pol4.jpg'
+import pol5 from '../img/pol5.jpg'
+import pol6 from '../img/pol6.jpg'
+import pol7 from '../img/pol7.jpg'
+import pol8 from '../img/pol8.jpg';
+
+/*
+import {
+  pol1,
+  pol2,
+  pol3
+} from '../img/index.js'
+*/
 
 const duplicatesNumber = 2;
-const colors = ['red', 'orange', 'yellow', 'green', 'aqua', 'blue', 'purple', 'white'];
+const imgs = [pol1, pol2, pol3, pol4, pol5, pol6, pol7, pol8];
 let squares = [];
 
-for (let i = 0; i < duplicatesNumber * colors.length; i++) {
+for (let i = 0; i < duplicatesNumber * imgs.length; i++) {
   squares.push({
     id: i,
-    color: colors[i < colors.length ? i : i - colors.length]
+    img: imgs[i < imgs.length ? i : i - imgs.length]
   })
 }
 
@@ -36,7 +52,7 @@ const App = () => {
 
   const squareClick = (item) => {
     if (count === 2) {
-      if (pick[0].color === pick[1].color) {
+      if (pick[0].img === pick[1].img) {
         setOpenSquares([...openSquares, pick[0].id, pick[1].id]);
         setPick([]);
       }
@@ -55,21 +71,29 @@ const App = () => {
       (pick[1] && pick[1].id === id)
   }
 
-
   return (
-    <div className="App">
+    <div>
       <header className="App-header">
       {squares.map(item => (
         <div key={item.id}
-        className="square"
         onClick={() => squareClick(item)}
         style={{
-          backgroundColor: isOpen(item.id) ? item.color : 'grey',
+          backgroundColor: isOpen(item.id) ? item.img : 'grey',
           width: 60,
           height: 60
-        }} />
-      ))}
+        }}>
+           <img src={item.img} style={{
+             display: isOpen(item.id) ? 'block' : 'none'
+           }} />
+        </div>
+        ))}
+      <div>
+
+      </div>
+
+
       </header>
+
     </div>
   );
 }
