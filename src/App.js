@@ -54,12 +54,14 @@ const App = () => {
     if (count === 2) {
       if (pick[0].img === pick[1].img) {
         setOpenSquares([...openSquares, pick[0].id, pick[1].id]);
-        setPick([]);
+      //  setCount (0);
+        setPick([]); //добавил
       }
-    setCount (0);
-    setPick ([]);
-    return ;
-    };
+      setCount (0);
+      setPick ([]);
+      return;
+      };
+
     setCount (count + 1);
     setPick ([...pick, item]);
     }
@@ -76,7 +78,9 @@ const App = () => {
       <header className="App-header">
       {squares.map(item => (
         <div key={item.id}
-        onClick={() => squareClick(item)}
+        onClick={() =>
+          isOpen(item.id) ? item.style={color: 'grey'} : squareClick(item)
+        }   //добавил
         style={{
           backgroundColor: isOpen(item.id) ? item.img : 'grey',
           width: 60,
@@ -87,11 +91,6 @@ const App = () => {
            }} />
         </div>
         ))}
-      <div>
-
-      </div>
-
-
       </header>
 
     </div>
