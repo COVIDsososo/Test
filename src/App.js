@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import './App.css';
 import pol1 from '../img/pol1.jpg'
 import pol2 from '../img/pol2.jpg'
@@ -22,67 +22,98 @@ const imgs = [pol1, pol2, pol3, pol4, pol5, pol6, pol7, pol8];
 let squares = [];
 
 for (let i = 0; i < duplicatesNumber * imgs.length; i++) {
+  const index = i < imgs.length ? i : i - imgs.length
+
+  // console.log(`i = ${i}, index = ${index}`)
   squares.push({
     id: i,
-    img: imgs[i < imgs.length ? i : i - imgs.length]
+    img: imgs[index]
   })
 }
 
 
-const Shuffle = (arr) => {
-  let i,
-      j,
-      temp;
+const Shuffle = (arr) => { //принимает массив ирандомно распределяет элементы его и возврщают новый массив
+  let i, j, temp;
 
   for (i = arr.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      temp = arr[i];
-      arr[i] = arr[j];
+      j = Math.floor(Math.random() * (i + 1));//каждый встреченный элемент меняется рандомно с другим
+      temp = arr[i];//три кружки
+      arr[i] = arr[j]; //време перем хапихивается элем Итый, чтобы поменять его с ждитым
       arr[j] = temp;
   }
   return arr;
 };
-squares = Shuffle(squares);
+squares = Shuffle(squares);  //если без жоравно, то она также был запустилась, но в скверс не записалось бы
+
+
+const reducer = (stateReducer, action) => {
+  switch(action.type){
+    case "Increment":
+      return stateReducer + 1;
+    case "Decrement":
+      return stateReducer - 1;
+    default:
+      return stateReducer;
+  }
+}
 
 
 const App = () => {
-  const [openSquares, setOpenSquares] = useState([]);
-  const [count, setCount] = useState(0);
-  const [pick, setPick] = useState([]);
+  const [openSquares, setOpenSquares] = useState([]);  //массив айдишников - записываются отгаданные - записываются чтобы быть открытыми
+  const [temporaryOpenSquares, setTemporaryOpenSquares] = useState([]); //открытые в текущем раунде квадраты
+
+  useEffect(() => {
+    setTimeout(() => {
+      check()
+    }, 1000)
+  }, [temporaryOpenSquares])
+
+  const check = () => {
+    // console.log('check', newtemporaryOpenSquares)
+    if (temporaryOpenSquares.length > 1) {
+      if (temporaryOpenSquares[0].img === temporaryOpenSquares[1].img) {
+        setOpenSquares([
+          ...openSquares,
+          temporaryOpenSquares[0].id,
+          temporaryOpenSquares[1].id
+        ]);//= УСПЕХ = устанавливается openSquares, раскрывается его содержимое
+      }              //и добавляется первый и второй элементы newTmpSquares
+      setTemporaryOpenSquares([]);  // = ТАК ИЛИ ИНАЧЕ = newTmpSquares обнуляется
+
+      if (duplicatesNumber * imgs.length === openSquares.length + 2) {alert('You won')}
+      console.log(duplicatesNumber * imgs.length);
+      console.log(openSquares.length + 2)
+      return;
+    };
+  }
 
   const squareClick = (item) => {
-    if (count === 2) {
-      if (pick[0].img === pick[1].img) {
-        setOpenSquares([...openSquares, pick[0].id, pick[1].id]);
-      //  setCount (0);
-        setPick([]); //добавил
-      }
-      setCount (0);
-      setPick ([]);
-      return;
-      };
-
-    setCount (count + 1);
-    setPick ([...pick, item]);
-    }
-
+    if (isOpen(item.id)) return false
+    let newTmpSquares = [...temporaryOpenSquares, item]  // ели нихуя, то итем +, ели что то то к нему еще и итем
+    setTemporaryOpenSquares(newTmpSquares);
+    //console.log('click', newTmpSquares, temporaryOpenSquares) // async state problem
+  }
 
   const isOpen = (id) => {
-    return openSquares.includes(id) ||
-      (pick[0] && pick[0].id === id) ||
-      (pick[1] && pick[1].id === id)
+    // console.log('id =', id, openSquares, openSquares.includes(id))
+    return openSquares.includes(id) || //открыт ли квадрат в предыдущих раунда
+      (temporaryOpenSquares[0] && temporaryOpenSquares[0].id === id) ||
+      (temporaryOpenSquares[1] && temporaryOpenSquares[1].id === id)
   }
+
+  const [count, dispatch] = useReducer(reducer, 0);
 
   return (
     <div>
+    <div> count: {count} </div>
+    <button onClick={() => dispatch({type: "Increment"})}>Increment</button>
+    <button onClick={() => dispatch({type: "Decrement"})}>Decrement</button>
       <header className="App-header">
-      {squares.map(item => (
+      {squares.map(item => ( //массив результатов выполнения действий к массиву дубликатов с id-шниками элементов
         <div key={item.id}
-        onClick={() =>
-          isOpen(item.id) ? item.style={color: 'grey'} : squareClick(item)
-        }   //добавил
+        onClick={() => squareClick(item)}
         style={{
-          backgroundColor: isOpen(item.id) ? item.img : 'grey',
+          backgroundColor: 'grey',
           width: 60,
           height: 60
         }}>
@@ -93,8 +124,11 @@ const App = () => {
         ))}
       </header>
 
+
+
     </div>
   );
 }
+
 
 export default App;
