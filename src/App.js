@@ -62,13 +62,18 @@ const App = () => {
   const reducer = (stateReducer, action) => {
     switch(action.type){
       case "TOS":
-        return setTemporaryOpenSquares([]);;
+        return(
+          setTemporaryOpenSquares([])
+        )
       case "OS":
         return   setOpenSquares([
             ...openSquares,
             temporaryOpenSquares[0].id,
             temporaryOpenSquares[1].id
           ]);
+      case "SCL":
+        return action.payload;
+
       default:
         return stateReducer;
     }
@@ -98,7 +103,8 @@ const App = () => {
   const squareClick = (item) => {
     if (isOpen(item.id)) return false
     let newTmpSquares = [...temporaryOpenSquares, item]  // ели нету ничего, то итем +, ели что то то к нему еще и итем
-    setTemporaryOpenSquares(newTmpSquares);
+    dispatch({type: "SCL", payload: setTemporaryOpenSquares(newTmpSquares)})
+    //setTemporaryOpenSquares(newTmpSquares);
     //console.log('click', newTmpSquares, temporaryOpenSquares) // async state problem
   }
 
