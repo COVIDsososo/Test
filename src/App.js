@@ -46,16 +46,6 @@ const Shuffle = (arr) => { //принимает массив ирандомно 
 squares = Shuffle(squares);  //если без жоравно, то она также был запустилась, но в скверс не записалось бы
 
 
-const reducer = (stateReducer, action) => {
-  switch(action.type){
-    case "Increment":
-      return stateReducer + 1;
-    case "Decrement":
-      return stateReducer - 1;
-    default:
-      return stateReducer;
-  }
-}
 
 
 const App = () => {
@@ -68,28 +58,46 @@ const App = () => {
     }, 1000)
   }, [temporaryOpenSquares])
 
+
+  const reducer = (stateReducer, action) => {
+    switch(action.type){
+      case "TOS":
+        return setTemporaryOpenSquares([]);;
+      case "OS":
+        return   setOpenSquares([
+            ...openSquares,
+            temporaryOpenSquares[0].id,
+            temporaryOpenSquares[1].id
+          ]);
+      default:
+        return stateReducer;
+    }
+  }
+
+  const [count, dispatch] = useReducer(reducer, 0);
+
   const check = () => {
     // console.log('check', newtemporaryOpenSquares)
     if (temporaryOpenSquares.length > 1) {
       if (temporaryOpenSquares[0].img === temporaryOpenSquares[1].img) {
-        setOpenSquares([
-          ...openSquares,
-          temporaryOpenSquares[0].id,
-          temporaryOpenSquares[1].id
-        ]);//= УСПЕХ = устанавливается openSquares, раскрывается его содержимое
+        dispatch({type: "OS"});
+        // setOpenSquares([
+        //   ...openSquares,
+        //   temporaryOpenSquares[0].id,
+        //   temporaryOpenSquares[1].id
+        // ]);//= УСПЕХ = устанавливается openSquares, раскрывается его содержимое
       }              //и добавляется первый и второй элементы newTmpSquares
-      setTemporaryOpenSquares([]);  // = ТАК ИЛИ ИНАЧЕ = newTmpSquares обнуляется
+    //  setTemporaryOpenSquares([]);  // = ТАК ИЛИ ИНАЧЕ = newTmpSquares обнуляется
+      dispatch({type: "TOS"});
 
       if (duplicatesNumber * imgs.length === openSquares.length + 2) {alert('You won')}
-      console.log(duplicatesNumber * imgs.length);
-      console.log(openSquares.length + 2)
       return;
     };
   }
 
   const squareClick = (item) => {
     if (isOpen(item.id)) return false
-    let newTmpSquares = [...temporaryOpenSquares, item]  // ели нихуя, то итем +, ели что то то к нему еще и итем
+    let newTmpSquares = [...temporaryOpenSquares, item]  // ели нету ничего, то итем +, ели что то то к нему еще и итем
     setTemporaryOpenSquares(newTmpSquares);
     //console.log('click', newTmpSquares, temporaryOpenSquares) // async state problem
   }
@@ -101,13 +109,9 @@ const App = () => {
       (temporaryOpenSquares[1] && temporaryOpenSquares[1].id === id)
   }
 
-  const [count, dispatch] = useReducer(reducer, 0);
 
   return (
     <div>
-    <div> count: {count} </div>
-    <button onClick={() => dispatch({type: "Increment"})}>Increment</button>
-    <button onClick={() => dispatch({type: "Decrement"})}>Decrement</button>
       <header className="App-header">
       {squares.map(item => ( //массив результатов выполнения действий к массиву дубликатов с id-шниками элементов
         <div key={item.id}
@@ -122,6 +126,8 @@ const App = () => {
            }} />
         </div>
         ))}
+        <div> count: {count} </div>
+
       </header>
 
 
