@@ -1,3 +1,12 @@
-export const pol1 = require(.pol1.jpg);
-export const pol2 = require(.pol2.jpg);
-export const pol3 = require(.pol3.jpg)
+//export default imgs;
+
+// const imgs = [
+//   { src: "./pol1.jpg"},
+//   { src: "./pol2.jpg"},
+//   { src: "./pol3.jpg"},
+//   { src: "./pol4.jpg"},
+//   { src: "./pol5.jpg"},
+//   { src: "./pol6.jpg"},
+//   { src: "./pol7.jpg"},
+//   { src: "./pol8.jpg"},
+// ];
