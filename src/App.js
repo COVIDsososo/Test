@@ -14,7 +14,7 @@ const imgs = [pol1, pol2, pol3, pol4, pol5, pol6, pol7, pol8];
 let squares = [];
 
 for (let i = 0; i < duplicatesNumber * imgs.length; i++) {
-  const index = i < imgs.length ? i : i - imgs.length
+  const index = i < imgs.length ? i : i - imgs.length //i7 in 7, i8 in 0, i9 in 1
   squares.push({
     id: i,
     img: imgs[index]
@@ -32,7 +32,6 @@ const Shuffle = (arr) => {
   return arr;
 };
 squares = Shuffle(squares);
-
 
 const App = () => {
   const initialState = {
@@ -60,7 +59,8 @@ const App = () => {
         return {
           ...state,
           temporaryOpenSquares: [
-            ...state.temporaryOpenSquares, action.item
+            ...state.temporaryOpenSquares,
+            action.item
           ]
         }
       default:
@@ -77,13 +77,15 @@ const App = () => {
         dispatch({type: "CaseOpenSquares"});
         }
       dispatch({type: "CaseTemporaryOpenSquares"});
-      if (duplicatesNumber * imgs.length === state.openSquares.length + 2) {alert('You won')}
+      if (duplicatesNumber * imgs.length === state.openSquares.length + 2) {
+        alert('You won');
+      }
       return;
     };
   }
 
   const isOpen = (id) => {
-    return state.openSquares.includes(id) ||
+    return state.openSquares.includes(id) || //если содержит id = открывает ИЛИ если первый элемент присуствует И его id является id = открывает ...
       (state.temporaryOpenSquares[0] && state.temporaryOpenSquares[0].id === id) ||
       (state.temporaryOpenSquares[1] && state.temporaryOpenSquares[1].id === id)
   }
@@ -116,9 +118,6 @@ const App = () => {
         </div>
         ))}
       </header>
-
-
-
     </div>
   );
 }
