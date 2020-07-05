@@ -1,6 +1,6 @@
 //export default imgs;
 
-// const imgs = [
+// const imgs1 = [
 //   { src: "./pol1.jpg"},
 //   { src: "./pol2.jpg"},
 //   { src: "./pol3.jpg"},
