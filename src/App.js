@@ -85,7 +85,7 @@ const App = () => {
   }
 
   const isOpen = (id) => {
-    return state.openSquares.includes(id) || //если содержит id = открывает ИЛИ если первый элемент присуствует И его id является id = открывает ...
+    return state.openSquares.includes(id) || 
       (state.temporaryOpenSquares[0] && state.temporaryOpenSquares[0].id === id) ||
       (state.temporaryOpenSquares[1] && state.temporaryOpenSquares[1].id === id)
   }
