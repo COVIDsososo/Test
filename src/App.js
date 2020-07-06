@@ -98,7 +98,7 @@ const App = () => {
   useEffect(() => {
     setTimeout(() => {
       check()
-    }, 1000)
+    }, 500)
   }, [temporaryOpenSquares])
 
   return (
